@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Scrapers\Scraper;
 use App\Scrapers\EbayScraper;
+use App\Scrapers\AmazonScraper;
 use App\Scrapers\DefaultScraper;
 use Illuminate\Support\ServiceProvider;
 
