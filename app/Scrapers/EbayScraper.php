@@ -3,25 +3,28 @@
 namespace App\Scrapers;
 
 use GuzzleHttp\Client;
+use Illuminate\Cache\Console\ClearCommand;
 use Symfony\Component\DomCrawler\Crawler;
 
 class EbayScraper implements Scraper 
 {
     private $url;
+    private $client;
 
-    public function __construct($url)
+    public function __construct(string $url)
     {
         $this->url = $url;
+        $this->client = new Client();
     }
 
-    public function scrapeData()
+    private function getHtml(): string
     {
-        $client = new Client();
-        $response = $client->get($this->url);
-        $html = (string) $response->getBody();
+        $response = $this->client->get($this->url);
+        return (string) $response->getBody();
+    }
 
-        $item = [];
-
+    private function parseHtml(string $html): array
+    {
         $crawler = new Crawler($html);
         $name = $crawler->filter('div[data-testid="x-item-title"] span[class="ux-textspans ux-textspans--BOLD"]')->text();
         $item['name'] = trim($name);
@@ -37,7 +40,14 @@ class EbayScraper implements Scraper
             }
         });
         $item['images'] = $images;
-        
+
+        return $item;
+    }
+
+    public function scrapeData(): array
+    {
+        $html = $this->getHtml();
+        $item = $this->parseHtml($html);
         return $item;
     }
 }
