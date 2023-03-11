@@ -17,6 +17,9 @@ An Web Sraper Service APP using Laravel Framework to scrape ebay and amazon webs
 - <code>php artisan serve</code>
 3. Open Postman to testing API
 
+### Unit Test
+- `php artisan test --testsuite=Unit`
+
 ### Endpoint
 
 http://[url]:[ip]/api/scrape [POST] body:url
